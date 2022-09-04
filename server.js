@@ -1,6 +1,7 @@
 const inquirer = require('inquirer')
 const express = require('express');
 const mysql = require('mysql2');
+const cTable = require ('console.table')
 
 const PORT = process.env.PORT || 3001;
 
@@ -69,7 +70,7 @@ const questions = {
         {
             type: 'list',
             message: 'What is the Employees role in the company?',
-            // will need to add into as well choices: ['Sales Lead','Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
+            choices: ['Sales Lead','Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
             name: 'newEmpRole'
         },
         {
@@ -83,7 +84,7 @@ const questions = {
         {
             type:'list',
             message: 'Which Employees role do you want to update?',
-            // choices: db.query('SELECT * FROM role.name'),
+            choices: db.query('SELECT * FROM role.name',(err, result)=> {} ),
             name: 'empUpdate'
         },
         {
@@ -103,9 +104,9 @@ const questions = {
                 case 'View all Employees':
                     console.log("view");
                     db.query('SELECT * FROM employee', function (err, results) {
-                        console.log(results);
+                        console.table(results)
                       });
-                    startApp()
+                     startApp()
                     break;
 
                 case 'Add Employee':
@@ -126,8 +127,9 @@ const questions = {
                 case 'View All Departments':
                     console.log("viewdept");
                     db.query('SELECT * FROM department', function (err, results) {
-                        console.log(results);
+                        console.table(results);
                       });
+                      
                     startApp();
                     break;
 
@@ -156,7 +158,7 @@ const addingRole = () => {
 const addEmployee = () => {
     inquirer.prompt(questions.newEmployee)
     .then((answers) => {
-        //going to be a put or post
+        db.query(`INSERT INTO employee` );
         startApp();
 })
 }
