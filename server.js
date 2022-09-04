@@ -1,4 +1,23 @@
 const inquirer = require('inquirer')
+const express = require('express');
+const mysql = require('mysql2');
+
+const PORT = process.env.PORT || 3001;
+
+const app = express();
+
+const db = mysql.createConnection(
+    {
+      host: 'localhost',
+      // MySQL username,
+      user: 'root',
+      // MySQL password
+      password: 'Hopie@89',
+      database: 'tracker_db'
+    },
+    console.log(`Connected to the tracker_db database.`)
+  );
+  
 
 
 const questions = {
@@ -6,7 +25,7 @@ const questions = {
      {
      type: 'list',
      message: 'What would you like to do?',
-     choices: ['View all Employees', 'Add Employee', 'Update Employee Roll', 'Add Roll', 'View All Departments', 'Add Department'],
+     choices: ['View all Employees', 'Add Employee', 'Update Employee Role', 'Add Role', 'View All Departments', 'Add Department'],
      name: 'mainChoice'
 }],
     addDept: [
@@ -19,7 +38,7 @@ const questions = {
     addRole: [
         {
             type: 'input',
-            message: 'What is the name of the roll you would like to add?',
+            message: 'What is the name of the role you would like to add?',
             name: 'newRole'
         },
         {
@@ -29,7 +48,7 @@ const questions = {
         },
         {
             type: 'list',
-            message: 'Which department does the roll belong to?',
+            message: 'Which department does the role belong to?',
             choices: ['Engineering', 'Finance', 'Legal', 'Sales', 'Service'],
             name: 'deptChoice'
 
@@ -49,9 +68,9 @@ const questions = {
         },
         {
             type: 'list',
-            message: 'What is the Employees roll in the company?',
+            message: 'What is the Employees role in the company?',
             // will need to add into as well choices: ['Sales Lead','Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
-            name: 'newEmpRoll'
+            name: 'newEmpRole'
         },
         {
             type: 'list',
@@ -60,18 +79,93 @@ const questions = {
             name: 'empManager'
         }
     ],
-    updateRoll: [
+    updateRole: [
         {
             type:'list',
-            message: 'Which Employees roll do you want to update?',
-            //choices: This will have to be updated somehow
+            message: 'Which Employees role do you want to update?',
+            // choices: db.query('SELECT * FROM role.name'),
             name: 'empUpdate'
         },
         {
             type:'list',
             message: 'Which role would you like to assign to the selected employee?',
             //choices this will also have so be updated somehow
-            name: 'assignedRoll'
+            name: 'assignedRole'
         }
     ]
 }
+    const startApp = () => {
+        inquirer.prompt(questions.main)
+        
+        .then((answers) => {
+           
+            switch (answers.mainChoice) {
+                case 'View all Employees':
+                    console.log("view");
+                    db.query('SELECT * FROM employee', function (err, results) {
+                        console.log(results);
+                      });
+                    startApp()
+                    break;
+
+                case 'Add Employee':
+                    console.log("addemploy");
+                    addEmployee();
+                    break;
+
+                case 'Update Employee Role':
+                    console.log("emprole");
+                    roleUpdate();
+                    break;
+
+                case 'Add Role':
+                    console.log("role");
+                    addingRole();
+                    break;
+
+                case 'View All Departments':
+                    console.log("viewdept");
+                    db.query('SELECT * FROM department', function (err, results) {
+                        console.log(results);
+                      });
+                    startApp();
+                    break;
+
+                case 'Add Department':
+                    console.log("adddept");
+                    addDepartment();
+                    break;
+               
+            }
+        })
+    }
+    const addDepartment = () => {
+        inquirer.prompt(questions.addDept)
+        .then((answers) => {
+            //going to be a put or post
+            startApp()
+    })
+}
+const addingRole = () => {
+    inquirer.prompt(questions.addRole)
+    .then((answers) => {
+        //going to be a put or post
+        startApp();
+})
+}
+const addEmployee = () => {
+    inquirer.prompt(questions.newEmployee)
+    .then((answers) => {
+        //going to be a put or post
+        startApp();
+})
+}
+const roleUpdate = () => {
+    inquirer.prompt(questions.updateRole)
+    .then((answers) => {
+        //going to be a put 
+        startApp();
+})
+}
+
+    startApp();
