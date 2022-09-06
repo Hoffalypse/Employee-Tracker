@@ -145,14 +145,15 @@ const questions = {
     const addEmployee = () => {
         db.query('SELECT * FROM role', (err, results) => {
         inquirer.prompt([
+          
             {
-                type:'input',
-                messgae:'What is the Employees first name?',
+                type: 'input',
+                message: 'What is the Employees first name?',
                 name: 'firstName'
             },
             {
-                type: 'input',
-                message: 'What is the Employees last name?',
+                type:'input',
+                message:'What is the Employees last name?',
                 name: 'lastName'
             },
             {
