@@ -141,6 +141,7 @@ const questions = {
     })
     })
 }
+//gets data for new employee name and role and converts role to integer 
     const addEmployee = () => {
         db.query('SELECT * FROM role', (err, results) => {
         inquirer.prompt([
@@ -180,12 +181,13 @@ const questions = {
         }
     )})
     }
+    //gets manager adds manager numer to existing data and inserts into db in correct format
     const addManager = (first, last, role) => {
         db.query('SELECT * FROM employee', (err, results) => {
             inquirer.prompt([ 
                  {
                 type: 'list',
-                messgage:'Who is the employees Manager',
+                messgage:'Who is the employees Manager?',
                 name: 'empManager',
                 choices: function(){
                     let empArr= []
@@ -197,12 +199,15 @@ const questions = {
             }
         ])
         .then((answers) => {
-            let role_id;
-            for (let a = 0; a < results.length; a++) {
-                if (results[a].name == answers.newEmpRole) {
-                    role_id = results[a].id;
+            let manager_id;
+                for (let a = 0; a < results.length; a++) {
+                    if (results[a].first_name + ' ' + results[a].last_name == answers.empManager) {
+                        manager_id = results[a].id;
+                    }
                 }
-            }
+                db.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES("${first}","${last}",${role}, ${manager_id})`)
+                    console.log('Your new Employee has been added!');
+            
         startApp();
         })
     })
@@ -259,7 +264,7 @@ const roleUpdate2 = (empID) => {
 ])
 
  .then((answers) => {
-    console.log('did u get here' + answers.assignedRole);
+    
     let newRole_id;
     for (let a = 0; a < results.length; a++) {
         if (results[a].name == answers.assignedRole) {
