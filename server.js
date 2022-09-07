@@ -281,7 +281,11 @@ const roleUpdate2 = (empID) => {
 }
 //the three different view commands logging correct table 
     const viewALL = () => {
-        db.query('SELECT * FROM employee', function (err, results) {
+        db.query(`SELECT employee.id,  employee.first_name AS "First Name",  employee.last_name AS "Last Name", role.name AS Title, department.name AS Department,
+        role.salary AS Salary, CONCAT (mgr.first_name, " ", mgr.last_name) AS Manager FROM employee
+        LEFT JOIN role ON employee.role_id = role.id
+        LEFT JOIN department ON role.department_id = department.id
+        LEFT JOIN employee mgr ON employee.manager_id = mgr.id;`, function (err, results) {
         console.table(results)
         startApp()
       });
@@ -293,7 +297,9 @@ const roleUpdate2 = (empID) => {
       });
 }
     const viewRole = () => {
-        db.query('SELECT * FROM role', function (err, results) {
+        db.query(`SELECT role.id, role.name AS "Job Title", department.name AS "Department", role.salary  from role
+        JOIN department 
+        on role.department_id = department.id`, function (err, results) {
             console.table(results);
             startApp()
       });
