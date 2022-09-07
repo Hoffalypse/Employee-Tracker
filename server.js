@@ -6,7 +6,7 @@ const cTable = require ('console.table')
 const PORT = process.env.PORT || 3001;
 
 const app = express();
-
+//boilerplate... connect to database
  db.configure(
     {
       host: 'localhost',
@@ -27,6 +27,7 @@ console.log('|         Bryan Wienhoff            |');
 console.log('|                                   |');
 console.log('`___________________________________/');
 
+//Starting quesion to be used in startapp() function
 const questions = {
     main: [
      {
@@ -43,6 +44,7 @@ const questions = {
         }
     ]
 }
+//function that directs based on response 
     const startApp = () => {
         inquirer.prompt(questions.main)
         
@@ -85,6 +87,7 @@ const questions = {
             }
         })
     }
+    //adds new department
     const addDepartment = () => {
         inquirer.prompt(questions.addDept)
         .then((answers) => {
@@ -93,6 +96,7 @@ const questions = {
             startApp()
     })
 }
+//adds new role 
     const addingRole = () => {
         db.query('SELECT * FROM department',(err, results) => {
             const addRole = {
@@ -125,12 +129,9 @@ const questions = {
         .then((answers) => {
             let department_id;
             for (let a = 0; a < results.length; a++) {
-                
-                console.log(answers.deptChoice)
-                console.log(results[a].name + 'this is results')
+
                 if (results[a].name == answers.deptChoice) {
                     department_id = results[a].id;
-                    
                 }
             }
                 
@@ -213,7 +214,7 @@ const questions = {
         })
     })
     }
-//Gets employee name to update and turns outputs employee ID integer
+//Gets employee name to update and outputs employee ID integer
     const roleUpdate = () => {
         db.query('SELECT * FROM employee',(err, results)=> {
      inquirer.prompt([
@@ -237,8 +238,6 @@ const questions = {
             if (results[a].first_name + ' ' + results[a].last_name == answers.empUpdate) {
                 employee_id = results[a].id;
             }
-            
-        
     }
     roleUpdate2(employee_id);
     
