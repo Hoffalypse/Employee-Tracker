@@ -17,7 +17,7 @@ Once the app starts, user will see this prompt with the following options:
 
 <img src="./Images/start.PNG" alt ="start screen">
 <p>
-User can view all departments, roles and employees on a formatted table in the CLI. User may also choose to add one of the three above listed items. Those added items will then be updated to the database and will be shown when the 'view' option is selected again. User also has the option to update the role of an individual employee, which will be changed within the database. A full video showing functionality is provided below. 
+User can view all departments, roles and employees on a formatted table in the CLI. User may also choose to add one of the three above listed items. Those added items will then be updated to the database and will be shown when the 'view' option is selected again. User also has the option to update the role of an individual employee, which will be changed within the database. To find the total salary or a selected department, use the 'Department Total Salary Option' and then select the desired department. A full video showing functionality is provided below. 
 
 
 

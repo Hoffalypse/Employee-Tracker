@@ -33,7 +33,7 @@ const questions = {
      {
      type: 'list',
      message: 'What would you like to do?',
-     choices: ['View all Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'Quit'],
+     choices: ['View all Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'Department Total Salary', 'Quit'],
      name: 'mainChoice'
 }],
     addDept: [
@@ -79,6 +79,9 @@ const questions = {
 
                 case 'Add Department':
                     addDepartment();
+                    break;
+                case 'Department Total Salary':
+                    salaryTotal();
                     break;
                 case 'Quit':
                     
@@ -135,7 +138,7 @@ const questions = {
                 }
             }
                 
-            db.query(`INSERT INTO role(name, salary, department_id) VALUES("${answers.newRole}",${answers.salary}, ${department_id})`)
+            db.query(`INSERT INTO role(title, salary, department_id) VALUES("${answers.newRole}",${answers.salary}, ${department_id})`)
             console.log('Added New Role!')
             startApp();
         
@@ -164,7 +167,7 @@ const questions = {
                 choices: function(){
                     let roleArr= []
                     for (let i = 0; i < results.length; i++) {  
-                        roleArr.push(results[i].name) 
+                        roleArr.push(results[i].title) 
                     }
                     return roleArr;
                 }
@@ -175,7 +178,7 @@ const questions = {
         .then((answers) => {
             let role_id;
             for (let a = 0; a < results.length; a++) {
-                if (results[a].name == answers.newEmpRole) {
+                if (results[a].title == answers.newEmpRole) {
                     role_id = results[a].id;
                 }
             }
@@ -256,7 +259,7 @@ const roleUpdate2 = (empID) => {
         choices: function(){
             let roleArr= []
             for (let i = 0; i < results.length; i++) {  
-                roleArr.push(results[i].name) 
+                roleArr.push(results[i].title) 
             }
             return roleArr;
         }
@@ -267,7 +270,7 @@ const roleUpdate2 = (empID) => {
     
     let newRole_id;
     for (let a = 0; a < results.length; a++) {
-        if (results[a].name == answers.assignedRole) {
+        if (results[a].title == answers.assignedRole) {
             newRole_id = results[a].id;
         }
     }
@@ -280,7 +283,7 @@ const roleUpdate2 = (empID) => {
 }
 //the three different view commands logging correct table 
     const viewALL = () => {
-        db.query(`SELECT employee.id,  employee.first_name AS "First Name",  employee.last_name AS "Last Name", role.name AS Title, department.name AS Department,
+        db.query(`SELECT employee.id,  employee.first_name AS First_Name,  employee.last_name AS Last_Name, role.title AS Title, department.name AS Department,
         role.salary AS Salary, CONCAT (mgr.first_name, " ", mgr.last_name) AS Manager FROM employee
         LEFT JOIN role ON employee.role_id = role.id
         LEFT JOIN department ON role.department_id = department.id
@@ -296,12 +299,55 @@ const roleUpdate2 = (empID) => {
       });
 }
     const viewRole = () => {
-        db.query(`SELECT role.id, role.name AS "Job Title", department.name AS "Department", role.salary  from role
+        db.query(`SELECT role.id, role.title AS Job_Title, department.name AS Department, role.salary  from role
         JOIN department 
         on role.department_id = department.id`, function (err, results) {
             console.table(results);
             startApp()
       });
 }
+    const salaryTotal = () => {
+        db.query('SELECT * FROM department',(err, results) => {
+            const totalSal = {
+                ques:[
+                {
+             
+                    type: 'list',
+                    name: 'deptChoice',
+                    message: 'Which department Would you like to see the total salary of?',
+                    choices: function(){
+                    let deptArr= []
+                    for (let i = 0; i < results.length; i++) {  
+                        deptArr.push(results[i].name) 
+                    }
+                    return deptArr;
+                    }   
+                }
+            ]}
+        inquirer.prompt(totalSal.ques)
+        .then((answers) => {
+            let departmentSalary;
+            for (let a = 0; a < results.length; a++) {
+
+                if (results[a].name == answers.deptChoice) {
+                    departmentSalary = results[a].id;
+                }
+            }
+            db.query(`SELECT sum(salary) AS ${answers.deptChoice}_Total FROM role 
+            JOIN department ON department_id = department.id WHERE department.id = ${departmentSalary}`,  function(err, results){
+                console.log("---------------");
+                console.table(results);
+                console.log("---------------");
+                startApp()
+            })
+            
+            
+        
+    })
+    
+    })
+}
+        
+    
     
     startApp()
