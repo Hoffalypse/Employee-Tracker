@@ -22,6 +22,10 @@ User can view all departments, roles and employees on a formatted table in the C
 
 
 
+https://user-images.githubusercontent.com/106857564/189443653-1fcdd39c-a832-4ce2-a7e8-9a52d233e689.mp4
+
+
+
 
 
 
