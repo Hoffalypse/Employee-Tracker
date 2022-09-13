@@ -11,7 +11,7 @@ const app = express();
     {
       host: 'localhost',
       user: 'root',
-      password: 'Hopie@89',
+      password: 'Insert Password Here',
       database: 'tracker_db'
     },
     console.log(`Connected to the tracker_db database.`)
